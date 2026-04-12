@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   ChevronRight,
   Loader2,
-  Share2,
-  Eye,
-  MoreHorizontal,
+  Plus,
   Trash2,
   CheckSquare,
   Clock,
@@ -14,18 +12,13 @@ import {
   Calendar,
   Link2
 } from 'lucide-react';
+import { SidebarSelect } from '../components/SidebarSelect';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 
 function formatIssueKey(id) {
   const compact = String(id).replace(/-/g, '');
   return `TF-${compact.slice(0, 8).toUpperCase()}`;
-}
-
-function formatStatusLabel(s) {
-  return String(s || '')
-    .replace(/_/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 const STATUS_OPTIONS = [
@@ -163,7 +156,13 @@ const IssueDetail = () => {
     }
   };
 
-  const assigneeUser = users.find((u) => String(u.id) === String(assigneeId));
+  const assigneeOptions = useMemo(
+    () => [
+      { value: '', label: 'Unassigned' },
+      ...users.map((u) => ({ value: String(u.id), label: u.name }))
+    ],
+    [users]
+  );
 
   if (loading) {
     return (
@@ -271,27 +270,17 @@ const IssueDetail = () => {
 
           <div className="jira-detail-block">
             <span className="jira-detail-label">Status</span>
-            <div className="jira-status-segment" role="group" aria-label="Workflow status">
-              {STATUS_OPTIONS.map((opt) => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  className={`jira-status-segment-btn ${status === opt.value ? 'active' : ''}`}
-                  disabled={savingField === 'status'}
-                  onClick={() => {
-                    if (opt.value === status) return;
-                    setStatus(opt.value);
-                    patchTask({ status: opt.value }, 'status');
-                  }}
-                >
-                  {savingField === 'status' && status === opt.value ? (
-                    <Loader2 size={14} className="animate-spin" />
-                  ) : (
-                    opt.label
-                  )}
-                </button>
-              ))}
-            </div>
+            <SidebarSelect
+              value={status}
+              options={STATUS_OPTIONS}
+              onChange={(next) => {
+                setStatus(next);
+                patchTask({ status: next }, 'status');
+              }}
+              disabled={savingField === 'status'}
+              pending={savingField === 'status'}
+              aria-label="Task status"
+            />
           </div>
 
           <div className="jira-detail-block">
@@ -299,32 +288,17 @@ const IssueDetail = () => {
               <User size={14} style={{ verticalAlign: 'middle', marginRight: 6 }} />
               Assignee
             </span>
-            <div className="jira-assignee-row">
-              {assigneeUser ? (
-                <div className="assignee-cell jira-assignee-pill">
-                  <div className="assignee-avatar">{assigneeUser.name.charAt(0)}</div>
-                  <span>{assigneeUser.name}</span>
-                </div>
-              ) : (
-                <span className="jira-muted">No assignee</span>
-              )}
-            </div>
-            <select
-              className="jira-sidebar-select"
+            <SidebarSelect
               value={assigneeId}
-              disabled={savingField === 'assignee'}
-              onChange={(e) => {
-                const next = e.target.value;
+              options={assigneeOptions}
+              onChange={(next) => {
                 setAssigneeId(next);
                 patchTask({ assignee_id: next }, 'assignee');
               }}
-            >
-              {users.map((u) => (
-                <option key={u.id} value={u.id}>
-                  {u.name}
-                </option>
-              ))}
-            </select>
+              disabled={savingField === 'assignee'}
+              pending={savingField === 'assignee'}
+              aria-label="Assignee"
+            />
           </div>
 
           <div className="jira-detail-block">
@@ -332,25 +306,17 @@ const IssueDetail = () => {
               <Flag size={14} style={{ verticalAlign: 'middle', marginRight: 6 }} />
               Priority
             </span>
-            <select
-              className="jira-sidebar-select"
+            <SidebarSelect
               value={priority}
-              disabled={savingField === 'priority'}
-              onChange={(e) => {
-                const next = e.target.value;
+              options={PRIORITY_OPTIONS}
+              onChange={(next) => {
                 setPriority(next);
                 patchTask({ priority: next }, 'priority');
               }}
-            >
-              {PRIORITY_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-            <div className="jira-priority-hint">
-              <span className={`badge badge-${priority}`}>{priority}</span>
-            </div>
+              disabled={savingField === 'priority'}
+              pending={savingField === 'priority'}
+              aria-label="Priority"
+            />
           </div>
 
           <div className="jira-detail-block">
