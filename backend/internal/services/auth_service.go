@@ -6,6 +6,7 @@ import (
 	"zomato-assignment/internal/models"
 	"zomato-assignment/internal/repos"
 
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -90,4 +91,27 @@ func (s *AuthService) GetAllUsers() ([]models.UserDTO, error) {
 	}
 
 	return dtos, nil
+}
+
+// ChangePassword verifies current password and updates to a new one
+func (s *AuthService) ChangePassword(userID uuid.UUID, currentPassword, newPassword string) error {
+	user, err := s.repo.GetByID(userID)
+	if err != nil || user == nil {
+		return errors.New("user not found")
+	}
+
+	// Compare current password
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(currentPassword)); err != nil {
+		return errors.New("incorrect current password")
+	}
+
+	// Hash new password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), 12)
+	if err != nil {
+		return err
+	}
+
+	// Update user entity
+	user.Password = string(hashedPassword)
+	return s.repo.Update(user)
 }

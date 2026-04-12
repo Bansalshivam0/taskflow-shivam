@@ -13,6 +13,7 @@ type UserRepository interface {
 	GetByEmail(email string) (*models.User, error)
 	GetByID(id uuid.UUID) (*models.User, error)
 	GetAll() ([]models.User, error)
+	Update(user *models.User) error
 }
 
 // postgresUserRepository is the GORM-based implementation of UserRepository.
@@ -51,4 +52,8 @@ func (r *postgresUserRepository) GetAll() ([]models.User, error) {
 		return nil, err
 	}
 	return users, nil
+}
+
+func (r *postgresUserRepository) Update(user *models.User) error {
+	return r.db.Save(user).Error
 }

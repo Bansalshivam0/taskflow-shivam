@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"zomato-assignment/internal/middleware"
 	"zomato-assignment/internal/response"
 	"zomato-assignment/internal/services"
 )
@@ -109,4 +110,50 @@ func (h *AuthHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.JSONResponse(w, http.StatusOK, users)
+}
+
+type ChangePasswordRequest struct {
+	CurrentPassword string `json:"currentPassword"`
+	NewPassword     string `json:"newPassword"`
+}
+
+func (h *AuthHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
+	userID, ok := middleware.GetUserIDFromContext(r.Context())
+	if !ok {
+		response.ErrorJSON(w, http.StatusUnauthorized, "unauthorized", nil)
+		return
+	}
+
+	var req ChangePasswordRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		response.ErrorJSON(w, http.StatusBadRequest, "Invalid request payload", nil)
+		return
+	}
+
+	fields := make(map[string]string)
+	if req.CurrentPassword == "" {
+		fields["currentPassword"] = "is required"
+	}
+	if req.NewPassword == "" {
+		fields["newPassword"] = "is required"
+	}
+
+	if len(fields) > 0 {
+		response.ErrorJSON(w, http.StatusBadRequest, "validation failed", fields)
+		return
+	}
+
+	err := h.service.ChangePassword(userID, req.CurrentPassword, req.NewPassword)
+	if err != nil {
+		if err.Error() == "incorrect current password" {
+			response.ErrorJSON(w, http.StatusUnauthorized, err.Error(), nil)
+		} else {
+			response.ErrorJSON(w, http.StatusInternalServerError, err.Error(), nil)
+		}
+		return
+	}
+
+	response.JSONResponse(w, http.StatusOK, map[string]string{
+		"message": "Password changed successfully",
+	})
 }

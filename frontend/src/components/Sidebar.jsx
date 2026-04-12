@@ -185,15 +185,19 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
             {theme === 'dark' ? 'Light mode' : 'Dark mode'}
           </button>
-          <div className="sidebar-user-row">
+          <NavLink 
+            to="/profile" 
+            className={({ isActive }) => `sidebar-user-row nav-item ${isActive ? 'active' : ''}`}
+            style={{ textDecoration: 'none', color: 'inherit', padding: '8px 10px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', border: 'none', background: 'transparent', textAlign: 'left' }}
+          >
             <div className="sidebar-user-avatar">
               <UserIcon size={18} />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: '14px', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name}</div>
-              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Standard</div>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>View Profile</div>
             </div>
-          </div>
+          </NavLink>
           <button type="button" className="nav-item logout-btn" onClick={logout} style={{ color: 'var(--error)' }}>
             <LogOut /> Log out
           </button>

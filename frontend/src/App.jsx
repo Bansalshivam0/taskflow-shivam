@@ -11,6 +11,7 @@ import Register from './pages/register'
 
 import Project from './pages/Project'
 import Dashboard from './pages/Dashboard'
+import Profile from './pages/Profile'
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -42,6 +43,7 @@ const App = () => {
             <Route path="/sprint" element={<SprintPlanner />} />
             <Route path="/project/:projectId" element={<Project />} />
             <Route path="/task/:taskId" element={<TaskDetail />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" />} />

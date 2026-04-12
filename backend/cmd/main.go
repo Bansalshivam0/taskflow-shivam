@@ -60,6 +60,7 @@ func main() {
 	// Auth routes
 	mux.HandleFunc("POST /auth/register", authHandler.Register)
 	mux.HandleFunc("POST /auth/login", authHandler.Login)
+	mux.Handle("POST /auth/change-password", middleware.AuthMiddleware(http.HandlerFunc(authHandler.ChangePassword)))
 	mux.Handle("GET /users", middleware.AuthMiddleware(http.HandlerFunc(authHandler.ListUsers)))
 
 	// Projects API
