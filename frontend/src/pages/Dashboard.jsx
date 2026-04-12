@@ -8,6 +8,7 @@ import {
   AlertCircle,
   ChevronRight,
   Calendar,
+  TrendingUp,
   Folder
 } from 'lucide-react';
 import api from '../services/api';
@@ -19,7 +20,8 @@ const Dashboard = () => {
   const [stats, setStats] = useState({
     total: 0,
     pending: 0,
-    completed: 0
+    completed: 0,
+    percentage: 0
   });
 
   const navigate = useNavigate();
@@ -33,8 +35,9 @@ const Dashboard = () => {
       const total = taskData.length;
       const completed = taskData.filter(t => t.status === 'done').length;
       const pending = total - completed;
+      const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
 
-      setStats({ total, pending, completed });
+      setStats({ total, pending, completed, percentage });
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
       toast.error('Failed to load dashboard data');
@@ -64,35 +67,45 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="stats-container">
-        <div className="stat-card">
+      {/* KPI Stats */}
+      <div className="stats-container" style={{ marginBottom: '24px', position: 'relative' }}>
+        <div className="stat-card" style={{ flex: '1 1 200px' }}>
           <div className="stat-icon-wrapper" style={{ background: 'rgba(79, 70, 229, 0.1)', color: 'var(--primary)' }}>
             <ListTodo size={24} />
           </div>
           <div className="stat-info">
             <div className="stat-info-label">Total Tasks</div>
-            <div className="stat-info-value">{stats.total}</div>
+            <div className="stat-info-value">{isLoading ? '-' : stats.total}</div>
           </div>
         </div>
 
-        <div className="stat-card">
-          <div className="stat-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>
-            <Clock size={24} />
-          </div>
-          <div className="stat-info">
-            <div className="stat-info-label">Pending</div>
-            <div className="stat-info-value">{stats.pending}</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
+        <div className="stat-card" style={{ flex: '1 1 200px' }}>
           <div className="stat-icon-wrapper" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>
             <CheckCircle2 size={24} />
           </div>
           <div className="stat-info">
             <div className="stat-info-label">Completed</div>
-            <div className="stat-info-value">{stats.completed}</div>
+            <div className="stat-info-value">{isLoading ? '-' : stats.completed}</div>
+          </div>
+        </div>
+
+        <div className="stat-card" style={{ flex: '1 1 200px' }}>
+          <div className="stat-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>
+            <Clock size={24} />
+          </div>
+          <div className="stat-info">
+            <div className="stat-info-label">To Do</div>
+            <div className="stat-info-value">{isLoading ? '-' : stats.pending}</div>
+          </div>
+        </div>
+
+        <div className="stat-card" style={{ flex: '1 1 200px' }}>
+          <div className="stat-icon-wrapper" style={{ background: 'rgba(236, 72, 153, 0.1)', color: '#ec4899' }}>
+            <TrendingUp size={24} />
+          </div>
+          <div className="stat-info">
+            <div className="stat-info-label">Progress</div>
+            <div className="stat-info-value">{isLoading ? '-' : `${stats.percentage}%`}</div>
           </div>
         </div>
       </div>
@@ -121,24 +134,24 @@ const Dashboard = () => {
                 onClick={() => navigate(`/task/${task.id}`)}
               >
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ 
-                    fontWeight: 600, 
+                  <div style={{
+                    fontWeight: 600,
                     fontSize: '15px',
-                    marginBottom: '8px', 
+                    marginBottom: '8px',
                     color: 'var(--text)',
-                    overflow: 'hidden', 
-                    textOverflow: 'ellipsis', 
-                    whiteSpace: 'nowrap' 
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
                   }}>
                     {task.title}
                   </div>
-                  
+
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
                     <div className="task-meta-item">
                       <Folder size={12} strokeWidth={2.5} />
                       <span style={{ fontWeight: 500 }}>{task.project?.name || 'General'}</span>
                     </div>
-                    
+
                     <div className={`priority-indicator priority-${task.priority}`}>
                       <AlertCircle size={12} strokeWidth={2.5} />
                       <span style={{ textTransform: 'capitalize' }}>{task.priority} Priority</span>

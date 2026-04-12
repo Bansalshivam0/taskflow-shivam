@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, Mail, Hash, ListTodo, CheckCircle2, Clock, Activity, Lock, Loader2 } from 'lucide-react';
+import { User, Mail, Hash, ListTodo, CheckCircle2, Clock, Lock, Loader2, Eye, EyeOff } from 'lucide-react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -15,6 +15,10 @@ const Profile = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
+
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -74,50 +78,7 @@ const Profile = () => {
     <div>
       <div className="page-header">
         <h1>Profile</h1>
-        <p className="page-header-sub">Your personal information and KPIs</p>
-      </div>
-
-      {/* KPI Stats */}
-      <div className="stats-container" style={{ marginBottom: '24px', position: 'relative' }}>
-        <div className="stat-card" style={{ flex: '1 1 200px' }}>
-          <div className="stat-icon-wrapper" style={{ background: 'rgba(79, 70, 229, 0.1)', color: 'var(--primary)' }}>
-            <ListTodo size={24} />
-          </div>
-          <div className="stat-info">
-            <div className="stat-info-label">Total Tasks</div>
-            <div className="stat-info-value">{isLoading ? '-' : stats.total}</div>
-          </div>
-        </div>
-
-        <div className="stat-card" style={{ flex: '1 1 200px' }}>
-          <div className="stat-icon-wrapper" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>
-            <CheckCircle2 size={24} />
-          </div>
-          <div className="stat-info">
-            <div className="stat-info-label">Completed</div>
-            <div className="stat-info-value">{isLoading ? '-' : stats.completed}</div>
-          </div>
-        </div>
-
-        <div className="stat-card" style={{ flex: '1 1 200px' }}>
-          <div className="stat-icon-wrapper" style={{ background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>
-            <Clock size={24} />
-          </div>
-          <div className="stat-info">
-            <div className="stat-info-label">To Do</div>
-            <div className="stat-info-value">{isLoading ? '-' : stats.pending}</div>
-          </div>
-        </div>
-
-        <div className="stat-card" style={{ flex: '1 1 200px' }}>
-          <div className="stat-icon-wrapper" style={{ background: 'rgba(236, 72, 153, 0.1)', color: '#ec4899' }}>
-            <Activity size={24} />
-          </div>
-          <div className="stat-info">
-            <div className="stat-info-label">Progress</div>
-            <div className="stat-info-value">{isLoading ? '-' : `${stats.percentage}%`}</div>
-          </div>
-        </div>
+        <p className="page-header-sub">Your personal information</p>
       </div>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', alignItems: 'flex-start' }}>
@@ -141,7 +102,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <div className="form-group">
               <label>Full Name</label>
               <div className="input-wrapper" style={{ pointerEvents: 'none' }}>
@@ -188,35 +149,65 @@ const Profile = () => {
 
             <div className="form-group">
               <label>Current Password</label>
-              <input
-                type="password"
-                value={currentPassword}
-                onChange={e => setCurrentPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showCurrentPassword ? 'text' : 'password'}
+                  value={currentPassword}
+                  onChange={e => setCurrentPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  style={{ width: '100%', paddingRight: '40px', padding: '8px 10px' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCurrentPassword((prev) => !prev)}
+                  style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 0, display: 'flex' }}
+                >
+                  {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
 
             <div className="form-group">
               <label>New Password</label>
-              <input
-                type="password"
-                value={newPassword}
-                onChange={e => setNewPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showNewPassword ? 'text' : 'password'}
+                  value={newPassword}
+                  onChange={e => setNewPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  style={{ width: '100%', paddingRight: '40px', padding: '8px 10px' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword((prev) => !prev)}
+                  style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 0, display: 'flex' }}
+                >
+                  {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
 
             <div className="form-group">
               <label>Confirm New Password</label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  style={{ width: '100%', paddingRight: '40px', padding: '8px 10px' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 0, display: 'flex' }}
+                >
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
 
             <button type="submit" className="btn" style={{ alignSelf: 'flex-start', marginTop: '8px' }} disabled={isChangingPassword}>

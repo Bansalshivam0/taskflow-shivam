@@ -187,19 +187,19 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
           </button>
           <NavLink 
             to="/profile" 
-            className={({ isActive }) => `sidebar-user-row nav-item ${isActive ? 'active' : ''}`}
-            style={{ textDecoration: 'none', color: 'inherit', padding: '8px 10px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', border: 'none', background: 'transparent', textAlign: 'left' }}
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            style={{ textDecoration: 'none' }}
           >
             <div className="sidebar-user-avatar">
-              <UserIcon size={18} />
+              <UserIcon size={16} />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: '14px', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name}</div>
+              <div style={{ fontSize: '13px', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user?.name}</div>
               <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>View Profile</div>
             </div>
           </NavLink>
-          <button type="button" className="nav-item logout-btn" onClick={logout} style={{ color: 'var(--error)' }}>
-            <LogOut /> Log out
+          <button type="button" className="nav-item logout-btn" onClick={logout}>
+            <LogOut size={16} /> Log out
           </button>
         </div>
       </aside>

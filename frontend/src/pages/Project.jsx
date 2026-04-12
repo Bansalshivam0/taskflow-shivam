@@ -262,9 +262,9 @@ const Project = () => {
         isOpen={taskModal.open}
         isEditMode={taskModal.editMode}
         activeProjectName={activeProjectName}
-        taskTitle={taskForm.title}       setTaskTitle={v => setTaskForm(f => ({ ...f, title: v }))}
-        taskDesc={taskForm.desc}         setTaskDesc={v => setTaskForm(f => ({ ...f, desc: v }))}
-        taskStatus={taskForm.status}     setTaskStatus={v => setTaskForm(f => ({ ...f, status: v }))}
+        taskTitle={taskForm.title} setTaskTitle={v => setTaskForm(f => ({ ...f, title: v }))}
+        taskDesc={taskForm.desc} setTaskDesc={v => setTaskForm(f => ({ ...f, desc: v }))}
+        taskStatus={taskForm.status} setTaskStatus={v => setTaskForm(f => ({ ...f, status: v }))}
         taskPriority={taskForm.priority} setTaskPriority={v => setTaskForm(f => ({ ...f, priority: v }))}
         taskAssigneeId={taskForm.assigneeId} setTaskAssigneeId={v => setTaskForm(f => ({ ...f, assigneeId: v }))}
         allUsers={allUsers}
