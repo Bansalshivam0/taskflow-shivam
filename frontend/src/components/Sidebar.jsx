@@ -56,7 +56,6 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
   const fetchProjects = async () => {
     try {
       const response = await api.get('/projects');
-      console.log(response.data);
       setProjects(response.data || []);
     } catch (error) {
       console.error('Error fetching projects:', error);
@@ -68,7 +67,6 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
   const fetchAllUsers = async () => {
     try {
       const response = await api.get('/users');
-      console.log("the users are ", response);
       setAllUsers(response.data || []);
     } catch (error) {
       console.error('Error fetching users:', error);

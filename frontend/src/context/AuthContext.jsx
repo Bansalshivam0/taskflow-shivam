@@ -23,10 +23,11 @@ export const AuthProvider = ({ children }) => {
       const { user, token } = response.data;
       setUser(user);
       localStorage.setItem('token', token);
-      toast.success('Welcome back!');
+      localStorage.setItem('user', JSON.stringify(user));
+      return { success: true };
     } catch (error) {
-      toast.error(error.response?.data?.error || 'Login failed');
-      throw error;
+      const message = error.response?.data?.error || 'Invalid credentials. Please try again.';
+      return { success: false, error: message };
     }
   };
 
