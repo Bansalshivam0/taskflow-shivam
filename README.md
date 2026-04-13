@@ -33,7 +33,7 @@ The only prerequisite is **[Docker Desktop](https://www.docker.com/products/dock
 ### 1. Clone & Configure
 ```bash
 git clone <your-repo-url>
-cd taskflow
+cd taskflow-shivam
 
 # Apply default environment configurations
 cp .env.example .env
