@@ -19,7 +19,7 @@ A modern, full-stack project and task management system built with **Go**, **Pos
 
 | Layer | Technology |
 | --- | --- |
-| **Backend** | Go 1.26, standard library `net/http`, GORM, Goose (DB Migrations) |
+| **Backend** | Go 1.24, standard library `net/http`, GORM, Goose (DB Migrations) |
 | **Database** | PostgreSQL 16 |
 | **Frontend** | React 19, Vite, React Router v7, Axios, Lucide React (Icons) |
 | **Infra** | Docker, Docker Compose, nginx |
@@ -32,7 +32,7 @@ The only prerequisite is **[Docker Desktop](https://www.docker.com/products/dock
 
 ### 1. Clone & Configure
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Bansalshivam0/taskflow-shivam.git
 cd taskflow-shivam
 
 # Apply default environment configurations
