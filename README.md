@@ -48,7 +48,7 @@ docker compose up --build
 ### 3. Access the Application
 Once the containers are healthy:
 * **Frontend UI:** [http://localhost:3000](http://localhost:3000)
-* **Backend API:** [http://localhost:8081](http://localhost:8081)
+* **Backend API:** [http://api:8081](http://api:8081)
 
 ---
 
